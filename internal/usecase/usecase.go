@@ -8,9 +8,9 @@ import (
 
 type Storage interface {
 	FindByUserID(ctx context.Context, userID int) (domain.Cart, error)
-	Create(ctx context.Context, userID int) (domain.Cart, error)
+	GetOrCreateByUserID(ctx context.Context, userID int) (domain.Cart, error)
 	Save(ctx context.Context, cart domain.Cart) error
-	Delete(ctx context.Context)
+	ClearByUserID(ctx context.Context, userID int) error
 }
 
 type ProductService interface {
