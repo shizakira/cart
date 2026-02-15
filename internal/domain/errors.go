@@ -3,5 +3,6 @@ package domain
 import "errors"
 
 var (
-	ErrItemNotFound = errors.New("item not found")
+	ErrCartIsEmpty  = errors.New("cart is empty")
+	ErrCartNotFound = errors.New("cart not found")
 )
