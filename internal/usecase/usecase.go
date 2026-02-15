@@ -6,10 +6,12 @@ import (
 	"github.com/shizakira/cart/internal/domain"
 )
 
+//go:generate mockery
+
 type Storage interface {
+	AddItem(ctx context.Context, userID int, skuID int, count uint) error
+	RemoveItem(ctx context.Context, userID int, skuID int) error
 	FindByUserID(ctx context.Context, userID int) (domain.Cart, error)
-	GetOrCreateByUserID(ctx context.Context, userID int) (domain.Cart, error)
-	Save(ctx context.Context, cart domain.Cart) error
 	ClearByUserID(ctx context.Context, userID int) error
 }
 
