@@ -19,9 +19,12 @@ func TestCart_AddItem_Success_NewItem(t *testing.T) {
 		SkuID:  2008,
 		Count:  3,
 	}
-
+	item := domain.Item{
+		SkuID: input.SkuID,
+		Count: input.Count,
+	}
 	storage := &mocks.Storage{}
-	storage.On("AddItem", ctx, input.UserID, input.SkuID, input.Count).
+	storage.On("AddItem", ctx, input.UserID, item).
 		Return(nil).
 		Once()
 
@@ -98,9 +101,12 @@ func TestCart_AddItem_StorageReturnsError(t *testing.T) {
 		SkuID:  2008,
 		Count:  4,
 	}
-
+	item := domain.Item{
+		SkuID: input.SkuID,
+		Count: input.Count,
+	}
 	storage := &mocks.Storage{}
-	storage.On("AddItem", ctx, input.UserID, input.SkuID, input.Count).
+	storage.On("AddItem", ctx, input.UserID, item).
 		Return(assert.AnError).
 		Once()
 

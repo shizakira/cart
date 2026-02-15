@@ -39,16 +39,16 @@ func (_m *Storage) EXPECT() *Storage_Expecter {
 }
 
 // AddItem provides a mock function for the type Storage
-func (_mock *Storage) AddItem(ctx context.Context, userID int, skuID int, count uint) error {
-	ret := _mock.Called(ctx, userID, skuID, count)
+func (_mock *Storage) AddItem(ctx context.Context, userID int, item domain.Item) error {
+	ret := _mock.Called(ctx, userID, item)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddItem")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int, int, uint) error); ok {
-		r0 = returnFunc(ctx, userID, skuID, count)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, int, domain.Item) error); ok {
+		r0 = returnFunc(ctx, userID, item)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -63,15 +63,14 @@ type Storage_AddItem_Call struct {
 // AddItem is a helper method to define mock.On call
 //   - ctx
 //   - userID
-//   - skuID
-//   - count
-func (_e *Storage_Expecter) AddItem(ctx interface{}, userID interface{}, skuID interface{}, count interface{}) *Storage_AddItem_Call {
-	return &Storage_AddItem_Call{Call: _e.mock.On("AddItem", ctx, userID, skuID, count)}
+//   - item
+func (_e *Storage_Expecter) AddItem(ctx interface{}, userID interface{}, item interface{}) *Storage_AddItem_Call {
+	return &Storage_AddItem_Call{Call: _e.mock.On("AddItem", ctx, userID, item)}
 }
 
-func (_c *Storage_AddItem_Call) Run(run func(ctx context.Context, userID int, skuID int, count uint)) *Storage_AddItem_Call {
+func (_c *Storage_AddItem_Call) Run(run func(ctx context.Context, userID int, item domain.Item)) *Storage_AddItem_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int), args[2].(int), args[3].(uint))
+		run(args[0].(context.Context), args[1].(int), args[2].(domain.Item))
 	})
 	return _c
 }
@@ -81,7 +80,7 @@ func (_c *Storage_AddItem_Call) Return(err error) *Storage_AddItem_Call {
 	return _c
 }
 
-func (_c *Storage_AddItem_Call) RunAndReturn(run func(ctx context.Context, userID int, skuID int, count uint) error) *Storage_AddItem_Call {
+func (_c *Storage_AddItem_Call) RunAndReturn(run func(ctx context.Context, userID int, item domain.Item) error) *Storage_AddItem_Call {
 	_c.Call.Return(run)
 	return _c
 }

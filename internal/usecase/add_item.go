@@ -17,7 +17,10 @@ func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
 		return domain.ErrItemNotFound
 	}
 
-	if err = c.storage.AddItem(ctx, input.UserID, input.SkuID, input.Count); err != nil {
+	if err = c.storage.AddItem(ctx, input.UserID, domain.Item{
+		SkuID: input.SkuID,
+		Count: input.Count,
+	}); err != nil {
 		return fmt.Errorf("storage.AddItem: %w", err)
 	}
 

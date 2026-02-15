@@ -9,7 +9,7 @@ import (
 //go:generate mockery
 
 type Storage interface {
-	AddItem(ctx context.Context, userID int, skuID int, count uint) error
+	AddItem(ctx context.Context, userID int, item domain.Item) error
 	RemoveItem(ctx context.Context, userID int, skuID int) error
 	Find(ctx context.Context, userID int) (domain.Cart, error)
 	Clear(ctx context.Context, userID int) error
