@@ -86,12 +86,12 @@ func (_c *Storage_AddItem_Call) RunAndReturn(run func(ctx context.Context, userI
 	return _c
 }
 
-// ClearByUserID provides a mock function for the type Storage
-func (_mock *Storage) ClearByUserID(ctx context.Context, userID int) error {
+// Clear provides a mock function for the type Storage
+func (_mock *Storage) Clear(ctx context.Context, userID int) error {
 	ret := _mock.Called(ctx, userID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for ClearByUserID")
+		panic("no return value specified for Clear")
 	}
 
 	var r0 error
@@ -103,41 +103,41 @@ func (_mock *Storage) ClearByUserID(ctx context.Context, userID int) error {
 	return r0
 }
 
-// Storage_ClearByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ClearByUserID'
-type Storage_ClearByUserID_Call struct {
+// Storage_Clear_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Clear'
+type Storage_Clear_Call struct {
 	*mock.Call
 }
 
-// ClearByUserID is a helper method to define mock.On call
+// Clear is a helper method to define mock.On call
 //   - ctx
 //   - userID
-func (_e *Storage_Expecter) ClearByUserID(ctx interface{}, userID interface{}) *Storage_ClearByUserID_Call {
-	return &Storage_ClearByUserID_Call{Call: _e.mock.On("ClearByUserID", ctx, userID)}
+func (_e *Storage_Expecter) Clear(ctx interface{}, userID interface{}) *Storage_Clear_Call {
+	return &Storage_Clear_Call{Call: _e.mock.On("Clear", ctx, userID)}
 }
 
-func (_c *Storage_ClearByUserID_Call) Run(run func(ctx context.Context, userID int)) *Storage_ClearByUserID_Call {
+func (_c *Storage_Clear_Call) Run(run func(ctx context.Context, userID int)) *Storage_Clear_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(int))
 	})
 	return _c
 }
 
-func (_c *Storage_ClearByUserID_Call) Return(err error) *Storage_ClearByUserID_Call {
+func (_c *Storage_Clear_Call) Return(err error) *Storage_Clear_Call {
 	_c.Call.Return(err)
 	return _c
 }
 
-func (_c *Storage_ClearByUserID_Call) RunAndReturn(run func(ctx context.Context, userID int) error) *Storage_ClearByUserID_Call {
+func (_c *Storage_Clear_Call) RunAndReturn(run func(ctx context.Context, userID int) error) *Storage_Clear_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// FindByUserID provides a mock function for the type Storage
-func (_mock *Storage) FindByUserID(ctx context.Context, userID int) (domain.Cart, error) {
+// Find provides a mock function for the type Storage
+func (_mock *Storage) Find(ctx context.Context, userID int) (domain.Cart, error) {
 	ret := _mock.Called(ctx, userID)
 
 	if len(ret) == 0 {
-		panic("no return value specified for FindByUserID")
+		panic("no return value specified for Find")
 	}
 
 	var r0 domain.Cart
@@ -158,31 +158,31 @@ func (_mock *Storage) FindByUserID(ctx context.Context, userID int) (domain.Cart
 	return r0, r1
 }
 
-// Storage_FindByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByUserID'
-type Storage_FindByUserID_Call struct {
+// Storage_Find_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Find'
+type Storage_Find_Call struct {
 	*mock.Call
 }
 
-// FindByUserID is a helper method to define mock.On call
+// Find is a helper method to define mock.On call
 //   - ctx
 //   - userID
-func (_e *Storage_Expecter) FindByUserID(ctx interface{}, userID interface{}) *Storage_FindByUserID_Call {
-	return &Storage_FindByUserID_Call{Call: _e.mock.On("FindByUserID", ctx, userID)}
+func (_e *Storage_Expecter) Find(ctx interface{}, userID interface{}) *Storage_Find_Call {
+	return &Storage_Find_Call{Call: _e.mock.On("Find", ctx, userID)}
 }
 
-func (_c *Storage_FindByUserID_Call) Run(run func(ctx context.Context, userID int)) *Storage_FindByUserID_Call {
+func (_c *Storage_Find_Call) Run(run func(ctx context.Context, userID int)) *Storage_Find_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(int))
 	})
 	return _c
 }
 
-func (_c *Storage_FindByUserID_Call) Return(cart domain.Cart, err error) *Storage_FindByUserID_Call {
+func (_c *Storage_Find_Call) Return(cart domain.Cart, err error) *Storage_Find_Call {
 	_c.Call.Return(cart, err)
 	return _c
 }
 
-func (_c *Storage_FindByUserID_Call) RunAndReturn(run func(ctx context.Context, userID int) (domain.Cart, error)) *Storage_FindByUserID_Call {
+func (_c *Storage_Find_Call) RunAndReturn(run func(ctx context.Context, userID int) (domain.Cart, error)) *Storage_Find_Call {
 	_c.Call.Return(run)
 	return _c
 }
