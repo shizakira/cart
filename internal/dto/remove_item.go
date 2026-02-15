@@ -1,6 +1,6 @@
 package dto
 
-type DeleteItemInput struct {
+type RemoveItemInput struct {
 	UserID int `json:"user_id"`
 	SkuID  int `json:"sku_id"`
 }
