@@ -8,6 +8,7 @@ import (
 	"context"
 
 	"github.com/shizakira/cart/internal/domain"
+	"github.com/shizakira/cart/internal/model"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -260,9 +261,64 @@ func (_m *ProductService) EXPECT() *ProductService_Expecter {
 	return &ProductService_Expecter{mock: &_m.Mock}
 }
 
+// GetProduct provides a mock function for the type ProductService
+func (_mock *ProductService) GetProduct(ctx context.Context, skuID int) (model.Product, error) {
+	ret := _mock.Called(ctx, skuID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetProduct")
+	}
+
+	var r0 model.Product
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, int) (model.Product, error)); ok {
+		return returnFunc(ctx, skuID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, int) model.Product); ok {
+		r0 = returnFunc(ctx, skuID)
+	} else {
+		r0 = ret.Get(0).(model.Product)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, int) error); ok {
+		r1 = returnFunc(ctx, skuID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// ProductService_GetProduct_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetProduct'
+type ProductService_GetProduct_Call struct {
+	*mock.Call
+}
+
+// GetProduct is a helper method to define mock.On call
+//   - ctx
+//   - skuID
+func (_e *ProductService_Expecter) GetProduct(ctx interface{}, skuID interface{}) *ProductService_GetProduct_Call {
+	return &ProductService_GetProduct_Call{Call: _e.mock.On("GetProduct", ctx, skuID)}
+}
+
+func (_c *ProductService_GetProduct_Call) Run(run func(ctx context.Context, skuID int)) *ProductService_GetProduct_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run(args[0].(context.Context), args[1].(int))
+	})
+	return _c
+}
+
+func (_c *ProductService_GetProduct_Call) Return(product model.Product, err error) *ProductService_GetProduct_Call {
+	_c.Call.Return(product, err)
+	return _c
+}
+
+func (_c *ProductService_GetProduct_Call) RunAndReturn(run func(ctx context.Context, skuID int) (model.Product, error)) *ProductService_GetProduct_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // IsProductExist provides a mock function for the type ProductService
-func (_mock *ProductService) IsProductExist(ctx context.Context, sku int) (bool, error) {
-	ret := _mock.Called(ctx, sku)
+func (_mock *ProductService) IsProductExist(ctx context.Context, skuID int) (bool, error) {
+	ret := _mock.Called(ctx, skuID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for IsProductExist")
@@ -271,15 +327,15 @@ func (_mock *ProductService) IsProductExist(ctx context.Context, sku int) (bool,
 	var r0 bool
 	var r1 error
 	if returnFunc, ok := ret.Get(0).(func(context.Context, int) (bool, error)); ok {
-		return returnFunc(ctx, sku)
+		return returnFunc(ctx, skuID)
 	}
 	if returnFunc, ok := ret.Get(0).(func(context.Context, int) bool); ok {
-		r0 = returnFunc(ctx, sku)
+		r0 = returnFunc(ctx, skuID)
 	} else {
 		r0 = ret.Get(0).(bool)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, int) error); ok {
-		r1 = returnFunc(ctx, sku)
+		r1 = returnFunc(ctx, skuID)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -293,12 +349,12 @@ type ProductService_IsProductExist_Call struct {
 
 // IsProductExist is a helper method to define mock.On call
 //   - ctx
-//   - sku
-func (_e *ProductService_Expecter) IsProductExist(ctx interface{}, sku interface{}) *ProductService_IsProductExist_Call {
-	return &ProductService_IsProductExist_Call{Call: _e.mock.On("IsProductExist", ctx, sku)}
+//   - skuID
+func (_e *ProductService_Expecter) IsProductExist(ctx interface{}, skuID interface{}) *ProductService_IsProductExist_Call {
+	return &ProductService_IsProductExist_Call{Call: _e.mock.On("IsProductExist", ctx, skuID)}
 }
 
-func (_c *ProductService_IsProductExist_Call) Run(run func(ctx context.Context, sku int)) *ProductService_IsProductExist_Call {
+func (_c *ProductService_IsProductExist_Call) Run(run func(ctx context.Context, skuID int)) *ProductService_IsProductExist_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run(args[0].(context.Context), args[1].(int))
 	})
@@ -310,7 +366,7 @@ func (_c *ProductService_IsProductExist_Call) Return(b bool, err error) *Product
 	return _c
 }
 
-func (_c *ProductService_IsProductExist_Call) RunAndReturn(run func(ctx context.Context, sku int) (bool, error)) *ProductService_IsProductExist_Call {
+func (_c *ProductService_IsProductExist_Call) RunAndReturn(run func(ctx context.Context, skuID int) (bool, error)) *ProductService_IsProductExist_Call {
 	_c.Call.Return(run)
 	return _c
 }
