@@ -11,8 +11,8 @@ import (
 type Storage interface {
 	AddItem(ctx context.Context, userID int, skuID int, count uint) error
 	RemoveItem(ctx context.Context, userID int, skuID int) error
-	FindByUserID(ctx context.Context, userID int) (domain.Cart, error)
-	ClearByUserID(ctx context.Context, userID int) error
+	Find(ctx context.Context, userID int) (domain.Cart, error)
+	Clear(ctx context.Context, userID int) error
 }
 
 type ProductService interface {
