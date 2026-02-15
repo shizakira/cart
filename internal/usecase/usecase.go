@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/shizakira/cart/internal/domain"
+	"github.com/shizakira/cart/internal/model"
 )
 
 //go:generate mockery
@@ -16,7 +17,8 @@ type Storage interface {
 }
 
 type ProductService interface {
-	IsProductExist(ctx context.Context, sku int) (bool, error)
+	IsProductExist(ctx context.Context, skuID int) (bool, error)
+	GetProduct(ctx context.Context, skuID int) (model.Product, error)
 }
 
 type Cart struct {
