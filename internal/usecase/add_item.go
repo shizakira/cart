@@ -6,6 +6,7 @@ import (
 
 	"github.com/shizakira/cart/internal/domain"
 	"github.com/shizakira/cart/internal/dto"
+	"github.com/shizakira/cart/internal/model"
 )
 
 func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
@@ -14,7 +15,7 @@ func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
 		return fmt.Errorf("productService.IsProductExist: %w", err)
 	}
 	if !exist {
-		return domain.ErrItemNotFound
+		return model.ErrProductNotFound
 	}
 
 	if err = c.storage.AddItem(ctx, input.UserID, domain.Item{

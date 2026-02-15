@@ -6,6 +6,7 @@ import (
 
 	"github.com/shizakira/cart/internal/domain"
 	"github.com/shizakira/cart/internal/dto"
+	"github.com/shizakira/cart/internal/model"
 	"github.com/shizakira/cart/internal/usecase"
 	"github.com/shizakira/cart/internal/usecase/mocks"
 	"github.com/stretchr/testify/assert"
@@ -62,7 +63,7 @@ func TestCart_AddItem_ProductNotFound(t *testing.T) {
 
 	err := uc.AddItem(ctx, input)
 
-	require.ErrorIs(t, err, domain.ErrItemNotFound)
+	require.ErrorIs(t, err, model.ErrProductNotFound)
 	productSvc.AssertExpectations(t)
 	storage.AssertExpectations(t)
 }
