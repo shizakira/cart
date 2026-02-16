@@ -22,7 +22,7 @@ func TestCart_AddItem_Success_NewItem(t *testing.T) {
 	}
 	item := domain.Item{
 		SkuID: input.SkuID,
-		Count: input.Count,
+		Count: uint(input.Count),
 	}
 	storage := &mocks.Storage{}
 	storage.On("AddItem", ctx, input.UserID, item).
@@ -104,7 +104,7 @@ func TestCart_AddItem_StorageReturnsError(t *testing.T) {
 	}
 	item := domain.Item{
 		SkuID: input.SkuID,
-		Count: input.Count,
+		Count: uint(input.Count),
 	}
 	storage := &mocks.Storage{}
 	storage.On("AddItem", ctx, input.UserID, item).

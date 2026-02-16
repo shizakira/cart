@@ -20,7 +20,7 @@ func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
 
 	if err = c.storage.AddItem(ctx, input.UserID, domain.Item{
 		SkuID: input.SkuID,
-		Count: input.Count,
+		Count: uint(input.Count),
 	}); err != nil {
 		return fmt.Errorf("storage.AddItem: %w", err)
 	}
