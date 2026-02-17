@@ -13,7 +13,7 @@ import (
 
 func TestCart_RemoveItem_Success(t *testing.T) {
 	ctx := context.Background()
-	input := dto.AddItemInput{
+	input := dto.RemoveItemInput{
 		UserID: 1007,
 		SkuID:  2008,
 	}
@@ -33,7 +33,7 @@ func TestCart_RemoveItem_Success(t *testing.T) {
 
 func TestCart_RemoveItem_StorageError(t *testing.T) {
 	ctx := context.Background()
-	input := dto.AddItemInput{
+	input := dto.RemoveItemInput{
 		UserID: 1007,
 		SkuID:  2008,
 	}
