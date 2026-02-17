@@ -18,7 +18,7 @@ import (
 	"github.com/stretchr/testify/suite"
 )
 
-var rootPath string = ""
+var rootPath string
 
 func Test_Integration(t *testing.T) {
 	suite.Run(t, &Suite{})
