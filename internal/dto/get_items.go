@@ -1,7 +1,15 @@
 package dto
 
+import val "github.com/go-ozzo/ozzo-validation"
+
 type GetItemsInput struct {
-	UserID int `json:"user_id"`
+	UserID int
+}
+
+func (d GetItemsInput) Validate() error {
+	return val.ValidateStruct(&d,
+		val.Field(&d.UserID, val.Required, val.Min(1).Error("sku_id must be >= 1")),
+	)
 }
 
 type GetItemsOutput struct {
