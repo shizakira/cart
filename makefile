@@ -10,3 +10,8 @@ test:
 
 integration-test:
 	go test -count=1 -v -tags=integration ./test/integration
+sqlc-install:
+	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
+
+sqlc-generate:
+	sqlc generate -f internal/adapter/postgres/sqlc.yaml
