@@ -14,12 +14,12 @@ func (d GetItemsInput) Validate() error {
 
 type GetItemsOutput struct {
 	Items      []Item `json:"items"`
-	TotalPrice uint   `json:"total_price"`
+	TotalPrice uint32 `json:"total_price"`
 }
 
 type Item struct {
 	SkuID int    `json:"sku_id"`
 	Name  string `json:"name"`
-	Count uint   `json:"count"`
-	Price uint   `json:"price"`
+	Count uint16 `json:"count"`
+	Price uint32 `json:"price"`
 }

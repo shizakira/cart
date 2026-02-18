@@ -19,30 +19,35 @@ func (c *Cart) GetItems(ctx context.Context, input dto.GetItemsInput) (dto.GetIt
 	if err != nil {
 		return output, fmt.Errorf("storage.Find: %w", err)
 	}
-	if len(cart.Items) == 0 {
+	if cart == nil {
+		return output, domain.ErrCartNotFound
+	}
+	if cart.IsEmpty() {
 		return output, domain.ErrCartIsEmpty
 	}
 
-	var totalPrice uint
-	items := make([]dto.Item, 0, len(cart.Items))
+	var totalPrice uint32
+
+	cartItems := cart.Items()
+	dtoItems := make([]dto.Item, 0, len(cartItems))
 
 	var g errgroup.Group
 	mx := sync.Mutex{}
 
-	for _, item := range cart.Items {
+	for _, item := range cartItems {
 		g.Go(func() error {
-			product, err := c.productService.GetProduct(ctx, item.SkuID)
+			product, err := c.productService.GetProduct(ctx, item.SkuID())
 			if err != nil {
 				return fmt.Errorf("productService.GetProduct: %w", err)
 			}
 
 			mx.Lock()
 
-			totalPrice += product.Price * item.Count
-			items = append(items, dto.Item{
-				SkuID: item.SkuID,
+			totalPrice += product.Price * uint32(item.Count())
+			dtoItems = append(dtoItems, dto.Item{
+				SkuID: item.SkuID(),
 				Name:  product.Name,
-				Count: item.Count,
+				Count: item.Count(),
 				Price: product.Price,
 			})
 
@@ -57,11 +62,11 @@ func (c *Cart) GetItems(ctx context.Context, input dto.GetItemsInput) (dto.GetIt
 		return output, fmt.Errorf("g.Wait: %w", err)
 	}
 
-	slices.SortFunc(items, func(item dto.Item, item2 dto.Item) int {
+	slices.SortFunc(dtoItems, func(item dto.Item, item2 dto.Item) int {
 		return item.SkuID - item2.SkuID
 	})
 
-	output.Items = items
+	output.Items = dtoItems
 	output.TotalPrice = totalPrice
 
 	return output, nil

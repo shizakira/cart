@@ -2,5 +2,5 @@ package model
 
 type Product struct {
 	Name  string
-	Price uint
+	Price uint32
 }

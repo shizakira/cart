@@ -39,53 +39,6 @@ func (_m *Storage) EXPECT() *Storage_Expecter {
 	return &Storage_Expecter{mock: &_m.Mock}
 }
 
-// AddItem provides a mock function for the type Storage
-func (_mock *Storage) AddItem(ctx context.Context, userID int, item domain.Item) error {
-	ret := _mock.Called(ctx, userID, item)
-
-	if len(ret) == 0 {
-		panic("no return value specified for AddItem")
-	}
-
-	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int, domain.Item) error); ok {
-		r0 = returnFunc(ctx, userID, item)
-	} else {
-		r0 = ret.Error(0)
-	}
-	return r0
-}
-
-// Storage_AddItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'AddItem'
-type Storage_AddItem_Call struct {
-	*mock.Call
-}
-
-// AddItem is a helper method to define mock.On call
-//   - ctx
-//   - userID
-//   - item
-func (_e *Storage_Expecter) AddItem(ctx interface{}, userID interface{}, item interface{}) *Storage_AddItem_Call {
-	return &Storage_AddItem_Call{Call: _e.mock.On("AddItem", ctx, userID, item)}
-}
-
-func (_c *Storage_AddItem_Call) Run(run func(ctx context.Context, userID int, item domain.Item)) *Storage_AddItem_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int), args[2].(domain.Item))
-	})
-	return _c
-}
-
-func (_c *Storage_AddItem_Call) Return(err error) *Storage_AddItem_Call {
-	_c.Call.Return(err)
-	return _c
-}
-
-func (_c *Storage_AddItem_Call) RunAndReturn(run func(ctx context.Context, userID int, item domain.Item) error) *Storage_AddItem_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
 // Clear provides a mock function for the type Storage
 func (_mock *Storage) Clear(ctx context.Context, userID int) error {
 	ret := _mock.Called(ctx, userID)
@@ -133,22 +86,24 @@ func (_c *Storage_Clear_Call) RunAndReturn(run func(ctx context.Context, userID 
 }
 
 // Find provides a mock function for the type Storage
-func (_mock *Storage) Find(ctx context.Context, userID int) (domain.Cart, error) {
+func (_mock *Storage) Find(ctx context.Context, userID int) (*domain.Cart, error) {
 	ret := _mock.Called(ctx, userID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Find")
 	}
 
-	var r0 domain.Cart
+	var r0 *domain.Cart
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int) (domain.Cart, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, int) (*domain.Cart, error)); ok {
 		return returnFunc(ctx, userID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int) domain.Cart); ok {
+	if returnFunc, ok := ret.Get(0).(func(context.Context, int) *domain.Cart); ok {
 		r0 = returnFunc(ctx, userID)
 	} else {
-		r0 = ret.Get(0).(domain.Cart)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*domain.Cart)
+		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, int) error); ok {
 		r1 = returnFunc(ctx, userID)
@@ -177,59 +132,58 @@ func (_c *Storage_Find_Call) Run(run func(ctx context.Context, userID int)) *Sto
 	return _c
 }
 
-func (_c *Storage_Find_Call) Return(cart domain.Cart, err error) *Storage_Find_Call {
+func (_c *Storage_Find_Call) Return(cart *domain.Cart, err error) *Storage_Find_Call {
 	_c.Call.Return(cart, err)
 	return _c
 }
 
-func (_c *Storage_Find_Call) RunAndReturn(run func(ctx context.Context, userID int) (domain.Cart, error)) *Storage_Find_Call {
+func (_c *Storage_Find_Call) RunAndReturn(run func(ctx context.Context, userID int) (*domain.Cart, error)) *Storage_Find_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// RemoveItem provides a mock function for the type Storage
-func (_mock *Storage) RemoveItem(ctx context.Context, userID int, skuID int) error {
-	ret := _mock.Called(ctx, userID, skuID)
+// Save provides a mock function for the type Storage
+func (_mock *Storage) Save(ctx context.Context, cart *domain.Cart) error {
+	ret := _mock.Called(ctx, cart)
 
 	if len(ret) == 0 {
-		panic("no return value specified for RemoveItem")
+		panic("no return value specified for Save")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int, int) error); ok {
-		r0 = returnFunc(ctx, userID, skuID)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *domain.Cart) error); ok {
+		r0 = returnFunc(ctx, cart)
 	} else {
 		r0 = ret.Error(0)
 	}
 	return r0
 }
 
-// Storage_RemoveItem_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RemoveItem'
-type Storage_RemoveItem_Call struct {
+// Storage_Save_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Save'
+type Storage_Save_Call struct {
 	*mock.Call
 }
 
-// RemoveItem is a helper method to define mock.On call
+// Save is a helper method to define mock.On call
 //   - ctx
-//   - userID
-//   - skuID
-func (_e *Storage_Expecter) RemoveItem(ctx interface{}, userID interface{}, skuID interface{}) *Storage_RemoveItem_Call {
-	return &Storage_RemoveItem_Call{Call: _e.mock.On("RemoveItem", ctx, userID, skuID)}
+//   - cart
+func (_e *Storage_Expecter) Save(ctx interface{}, cart interface{}) *Storage_Save_Call {
+	return &Storage_Save_Call{Call: _e.mock.On("Save", ctx, cart)}
 }
 
-func (_c *Storage_RemoveItem_Call) Run(run func(ctx context.Context, userID int, skuID int)) *Storage_RemoveItem_Call {
+func (_c *Storage_Save_Call) Run(run func(ctx context.Context, cart *domain.Cart)) *Storage_Save_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int), args[2].(int))
+		run(args[0].(context.Context), args[1].(*domain.Cart))
 	})
 	return _c
 }
 
-func (_c *Storage_RemoveItem_Call) Return(err error) *Storage_RemoveItem_Call {
+func (_c *Storage_Save_Call) Return(err error) *Storage_Save_Call {
 	_c.Call.Return(err)
 	return _c
 }
 
-func (_c *Storage_RemoveItem_Call) RunAndReturn(run func(ctx context.Context, userID int, skuID int) error) *Storage_RemoveItem_Call {
+func (_c *Storage_Save_Call) RunAndReturn(run func(ctx context.Context, cart *domain.Cart) error) *Storage_Save_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -312,61 +266,6 @@ func (_c *ProductService_GetProduct_Call) Return(product model.Product, err erro
 }
 
 func (_c *ProductService_GetProduct_Call) RunAndReturn(run func(ctx context.Context, skuID int) (model.Product, error)) *ProductService_GetProduct_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// IsProductExist provides a mock function for the type ProductService
-func (_mock *ProductService) IsProductExist(ctx context.Context, skuID int) (bool, error) {
-	ret := _mock.Called(ctx, skuID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for IsProductExist")
-	}
-
-	var r0 bool
-	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int) (bool, error)); ok {
-		return returnFunc(ctx, skuID)
-	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, int) bool); ok {
-		r0 = returnFunc(ctx, skuID)
-	} else {
-		r0 = ret.Get(0).(bool)
-	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, int) error); ok {
-		r1 = returnFunc(ctx, skuID)
-	} else {
-		r1 = ret.Error(1)
-	}
-	return r0, r1
-}
-
-// ProductService_IsProductExist_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'IsProductExist'
-type ProductService_IsProductExist_Call struct {
-	*mock.Call
-}
-
-// IsProductExist is a helper method to define mock.On call
-//   - ctx
-//   - skuID
-func (_e *ProductService_Expecter) IsProductExist(ctx interface{}, skuID interface{}) *ProductService_IsProductExist_Call {
-	return &ProductService_IsProductExist_Call{Call: _e.mock.On("IsProductExist", ctx, skuID)}
-}
-
-func (_c *ProductService_IsProductExist_Call) Run(run func(ctx context.Context, skuID int)) *ProductService_IsProductExist_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		run(args[0].(context.Context), args[1].(int))
-	})
-	return _c
-}
-
-func (_c *ProductService_IsProductExist_Call) Return(b bool, err error) *ProductService_IsProductExist_Call {
-	_c.Call.Return(b, err)
-	return _c
-}
-
-func (_c *ProductService_IsProductExist_Call) RunAndReturn(run func(ctx context.Context, skuID int) (bool, error)) *ProductService_IsProductExist_Call {
 	_c.Call.Return(run)
 	return _c
 }

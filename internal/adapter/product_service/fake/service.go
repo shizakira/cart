@@ -26,12 +26,6 @@ func randomDelay() {
 	time.Sleep(time.Millisecond * time.Duration(50+rand.Intn(150)))
 }
 
-func (p *Service) IsProductExist(ctx context.Context, skuID int) (bool, error) {
-	randomDelay()
-	_, ok := p.products[skuID]
-	return ok, nil
-}
-
 func (p *Service) GetProduct(ctx context.Context, skuID int) (model.Product, error) {
 	randomDelay()
 	prod, ok := p.products[skuID]

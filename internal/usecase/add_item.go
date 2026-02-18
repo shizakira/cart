@@ -6,23 +6,27 @@ import (
 
 	"github.com/shizakira/cart/internal/domain"
 	"github.com/shizakira/cart/internal/dto"
-	"github.com/shizakira/cart/internal/model"
 )
 
 func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
-	exist, err := c.productService.IsProductExist(ctx, input.SkuID)
+	_, err := c.productService.GetProduct(ctx, input.SkuID)
 	if err != nil {
-		return fmt.Errorf("productService.IsProductExist: %w", err)
-	}
-	if !exist {
-		return model.ErrProductNotFound
+		return fmt.Errorf("productService.GetProduct: %w", err)
 	}
 
-	if err = c.storage.AddItem(ctx, input.UserID, domain.Item{
-		SkuID: input.SkuID,
-		Count: uint(input.Count),
-	}); err != nil {
-		return fmt.Errorf("storage.AddItem: %w", err)
+	cart, err := c.storage.Find(ctx, input.UserID)
+	if err != nil {
+		return fmt.Errorf("storage.Find: %w", err)
+	}
+	if cart == nil {
+		cart = domain.NewCart(input.UserID)
+	}
+
+	item := domain.NewItem(input.SkuID, uint16(input.Count))
+	cart.AddItem(item)
+
+	if err = c.storage.Save(ctx, cart); err != nil {
+		return fmt.Errorf("storage.Save: %w", err)
 	}
 
 	return nil

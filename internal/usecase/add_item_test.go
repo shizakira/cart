@@ -10,6 +10,7 @@ import (
 	"github.com/shizakira/cart/internal/usecase"
 	"github.com/shizakira/cart/internal/usecase/mocks"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,18 +21,22 @@ func TestCart_AddItem_Success_NewItem(t *testing.T) {
 		SkuID:  2008,
 		Count:  3,
 	}
-	item := domain.Item{
-		SkuID: input.SkuID,
-		Count: uint(input.Count),
-	}
 	storage := &mocks.Storage{}
-	storage.On("AddItem", ctx, input.UserID, item).
+	storage.On("Find", ctx, input.UserID).
+		Return(nil, nil).
+		Once()
+	storage.On("Save", ctx, mock.MatchedBy(func(cart *domain.Cart) bool {
+		return cart.UserID() == input.UserID &&
+			len(cart.Items()) == 1 &&
+			cart.Items()[0].SkuID() == input.SkuID &&
+			cart.Items()[0].Count() == uint16(input.Count)
+	})).
 		Return(nil).
 		Once()
 
 	productSvc := &mocks.ProductService{}
-	productSvc.On("IsProductExist", ctx, input.SkuID).
-		Return(true, nil).
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, nil).
 		Once()
 
 	uc := usecase.NewCart(storage, productSvc)
@@ -52,17 +57,20 @@ func TestCart_AddItem_ProductNotFound(t *testing.T) {
 	}
 
 	storage := &mocks.Storage{}
-	storage.AssertNotCalled(t, "AddItem")
+	storage.AssertNotCalled(t, "Find")
+	storage.AssertNotCalled(t, "Save")
 
 	productSvc := &mocks.ProductService{}
-	productSvc.On("IsProductExist", ctx, input.SkuID).
-		Return(false, nil).
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, model.ErrProductNotFound).
 		Once()
 
 	uc := usecase.NewCart(storage, productSvc)
 
 	err := uc.AddItem(ctx, input)
 
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "productService.GetProduct")
 	require.ErrorIs(t, err, model.ErrProductNotFound)
 	productSvc.AssertExpectations(t)
 	storage.AssertExpectations(t)
@@ -77,11 +85,12 @@ func TestCart_AddItem_ProductServiceReturnsError(t *testing.T) {
 	}
 
 	storage := &mocks.Storage{}
-	storage.AssertNotCalled(t, "AddItem")
+	storage.AssertNotCalled(t, "Find")
+	storage.AssertNotCalled(t, "Save")
 
 	productSvc := &mocks.ProductService{}
-	productSvc.On("IsProductExist", ctx, input.SkuID).
-		Return(false, assert.AnError).
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, assert.AnError).
 		Once()
 
 	uc := usecase.NewCart(storage, productSvc)
@@ -89,31 +98,28 @@ func TestCart_AddItem_ProductServiceReturnsError(t *testing.T) {
 	err := uc.AddItem(ctx, input)
 
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "productService.IsProductExist")
-
+	require.Contains(t, err.Error(), "productService.GetProduct")
 	productSvc.AssertExpectations(t)
 	storage.AssertExpectations(t)
 }
 
-func TestCart_AddItem_StorageReturnsError(t *testing.T) {
+func TestCart_AddItem_StorageFindReturnsError(t *testing.T) {
 	ctx := context.Background()
 	input := dto.AddItemInput{
 		UserID: 1007,
 		SkuID:  2008,
 		Count:  4,
 	}
-	item := domain.Item{
-		SkuID: input.SkuID,
-		Count: uint(input.Count),
-	}
+
 	storage := &mocks.Storage{}
-	storage.On("AddItem", ctx, input.UserID, item).
-		Return(assert.AnError).
+	storage.On("Find", ctx, input.UserID).
+		Return(nil, assert.AnError).
 		Once()
+	storage.AssertNotCalled(t, "Save")
 
 	productSvc := &mocks.ProductService{}
-	productSvc.On("IsProductExist", ctx, input.SkuID).
-		Return(true, nil).
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, nil).
 		Once()
 
 	uc := usecase.NewCart(storage, productSvc)
@@ -121,8 +127,42 @@ func TestCart_AddItem_StorageReturnsError(t *testing.T) {
 	err := uc.AddItem(ctx, input)
 
 	require.Error(t, err)
-	require.Contains(t, err.Error(), "storage.AddItem")
+	require.Contains(t, err.Error(), "storage.Find")
+	storage.AssertExpectations(t)
+	productSvc.AssertExpectations(t)
+}
 
+func TestCart_AddItem_StorageSaveReturnsError(t *testing.T) {
+	ctx := context.Background()
+	input := dto.AddItemInput{
+		UserID: 1007,
+		SkuID:  2008,
+		Count:  4,
+	}
+	storage := &mocks.Storage{}
+	storage.On("Find", ctx, input.UserID).
+		Return(nil, nil).
+		Once()
+	storage.On("Save", ctx, mock.MatchedBy(func(cart *domain.Cart) bool {
+		return cart.UserID() == input.UserID &&
+			len(cart.Items()) == 1 &&
+			cart.Items()[0].SkuID() == input.SkuID &&
+			cart.Items()[0].Count() == uint16(input.Count)
+	})).
+		Return(assert.AnError).
+		Once()
+
+	productSvc := &mocks.ProductService{}
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, nil).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc)
+
+	err := uc.AddItem(ctx, input)
+
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "storage.Save")
 	storage.AssertExpectations(t)
 	productSvc.AssertExpectations(t)
 }

@@ -20,7 +20,7 @@ func (h Handlers) AddItem(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.Atoi(chi.URLParam(r, "user_id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("user id strconv err")
+		log.Warn().Err(err).Msg("strconv.Atoi")
 
 		return
 	}
@@ -28,7 +28,7 @@ func (h Handlers) AddItem(w http.ResponseWriter, r *http.Request) {
 	skuID, err := strconv.Atoi(chi.URLParam(r, "sku_id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("sku id strconv err")
+		log.Warn().Err(err).Msg("strconv.Atoi")
 
 		return
 	}
@@ -36,7 +36,7 @@ func (h Handlers) AddItem(w http.ResponseWriter, r *http.Request) {
 	var body Body
 	if err = json.NewDecoder(r.Body).Decode(&body); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("body decode err")
+		log.Warn().Err(err).Msg("json.NewDecoder")
 
 		return
 	}
@@ -49,7 +49,7 @@ func (h Handlers) AddItem(w http.ResponseWriter, r *http.Request) {
 
 	if err = input.Validate(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("validate body err")
+		log.Warn().Err(err).Msg("input.Validate")
 
 		return
 	}
@@ -57,13 +57,13 @@ func (h Handlers) AddItem(w http.ResponseWriter, r *http.Request) {
 	if err = h.usecase.AddItem(r.Context(), input); err != nil {
 		if errors.Is(err, model.ErrProductNotFound) {
 			w.WriteHeader(http.StatusBadRequest)
-			log.Warn().Err(err).Msg("product not found err")
+			log.Warn().Err(err).Msg("usecase.AddItem")
 
 			return
 		}
 
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Warn().Err(err).Msg("usecase.AddItem err")
+		log.Error().Err(err).Msg("usecase.AddItem")
 
 		return
 	}

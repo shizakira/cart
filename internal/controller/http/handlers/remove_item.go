@@ -13,7 +13,7 @@ func (h Handlers) RemoveItem(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.Atoi(chi.URLParam(r, "user_id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("user id strconv err")
+		log.Warn().Err(err).Msg("strconv.Atoi")
 
 		return
 	}
@@ -21,7 +21,7 @@ func (h Handlers) RemoveItem(w http.ResponseWriter, r *http.Request) {
 	skuID, err := strconv.Atoi(chi.URLParam(r, "sku_id"))
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("sku id strconv err")
+		log.Warn().Err(err).Msg("strconv.Atoi")
 
 		return
 	}
@@ -32,14 +32,14 @@ func (h Handlers) RemoveItem(w http.ResponseWriter, r *http.Request) {
 	}
 	if err = input.Validate(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		log.Warn().Err(err).Msg("validate body err")
+		log.Warn().Err(err).Msg("input.Validate")
 
 		return
 	}
 
 	if err = h.usecase.RemoveItem(r.Context(), input); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		log.Error().Err(err).Msg("validate body err")
+		log.Error().Err(err).Msg("usecase.RemoveItem")
 
 		return
 	}
