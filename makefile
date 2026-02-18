@@ -1,3 +1,6 @@
+include .env
+export $(shell sed 's/=.*//' .env)
+
 run-all:
 	go run ./cmd/app/...
 
@@ -10,8 +13,22 @@ test:
 
 integration-test:
 	go test -count=1 -v -tags=integration ./test/integration
+
 sqlc-install:
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 
 sqlc-generate:
 	sqlc generate -f internal/adapter/postgres/sqlc.yaml
+
+migrate-install:
+	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@v4.18.1
+
+migrate-create:
+	@read -p "Name:" name; \
+	migrate create -ext sql -dir "$(MIGRATE_PATH)" $$name
+
+migrate-up:
+	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" up
+
+migrate-down:
+	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" down -all

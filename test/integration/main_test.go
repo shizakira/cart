@@ -13,7 +13,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/shizakira/cart/internal/app"
 	"github.com/shizakira/cart/internal/config"
-	"github.com/shizakira/cart/pkg/httpserver"
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 )
@@ -34,18 +33,23 @@ func (s *Suite) SetupSuite() {
 	s.Assertions = s.Require()
 	s.Client = &http.Client{}
 
-	c := config.Config{
-		App: config.App{
-			Name:    "cart-service",
-			Version: "test",
-		},
-		HTTP: httpserver.Config{
-			Addr:         "localhost",
-			Port:         "8083",
-			ReadTimeout:  20 * time.Second,
-			WriteTimeout: 20 * time.Second,
-		},
-	}
+	//c := config.Config{
+	//	App: config.App{
+	//		Name:    "cart-service",
+	//		Version: "test",
+	//	},
+	//	HTTP: httpserver.Config{
+	//		Addr:         "localhost",
+	//		Port:         "8083",
+	//		ReadTimeout:  20 * time.Second,
+	//		WriteTimeout: 20 * time.Second,
+	//	},
+	//}
+
+	c, err := config.New() // .env надо в test/integration тоже поместить
+	s.NoError(err)
+
+	s.ResetMigrations()
 
 	addr := net.JoinHostPort(c.HTTP.Addr, c.HTTP.Port)
 	rootPath = "http://" + addr
