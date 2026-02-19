@@ -2,7 +2,10 @@ include .env
 export $(shell sed 's/=.*//' .env)
 
 run-all:
-	go run ./cmd/app/...
+	docker compose up --build --force-recreate
+
+down:
+	docker compose down
 
 mockery-install:
 	go install github.com/vektra/mockery/v3@v3.2.5
