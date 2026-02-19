@@ -9,6 +9,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/joho/godotenv"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/shizakira/cart/internal/app"
@@ -33,20 +34,8 @@ func (s *Suite) SetupSuite() {
 	s.Assertions = s.Require()
 	s.Client = &http.Client{}
 
-	//c := config.Config{
-	//	App: config.App{
-	//		Name:    "cart-service",
-	//		Version: "test",
-	//	},
-	//	HTTP: httpserver.Config{
-	//		Addr:         "localhost",
-	//		Port:         "8083",
-	//		ReadTimeout:  20 * time.Second,
-	//		WriteTimeout: 20 * time.Second,
-	//	},
-	//}
-
-	c, err := config.New() // .env надо в test/integration тоже поместить
+	godotenv.Overload(".env.test")
+	c, err := config.NewTest()
 	s.NoError(err)
 
 	s.ResetMigrations()
@@ -57,14 +46,9 @@ func (s *Suite) SetupSuite() {
 	log.Logger = zerolog.Nop()
 
 	go func() {
-		err := app.Run(context.Background(), c)
+		err = app.Run(context.Background(), c)
 		s.NoError(err)
 	}()
 
 	time.Sleep(200 * time.Millisecond)
 }
-func (s *Suite) TearDownSuite() {}
-
-func (s *Suite) SetupTest() {}
-
-func (s *Suite) TearDownTest() {}

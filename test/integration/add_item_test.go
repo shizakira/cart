@@ -16,19 +16,19 @@ func (s *Suite) Test_AddItem() {
 	}{
 		{
 			name:       "ok",
-			path:       "/user/1007/cart/2008",
+			path:       "/user/1007/cart/1076963",
 			body:       `{"count":1}`,
 			wantStatus: http.StatusNoContent,
 		},
 		{
 			name:       "product not found",
-			path:       "/user/1007/cart/999999",
+			path:       "/user/1007/cart/2008",
 			body:       `{"count":1}`,
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "invalid user id",
-			path:       "/user/abc/cart/2008",
+			path:       "/user/abc/cart/1076963",
 			body:       `{"count":1}`,
 			wantStatus: http.StatusBadRequest,
 		},
@@ -40,19 +40,19 @@ func (s *Suite) Test_AddItem() {
 		},
 		{
 			name:       "invalid json body",
-			path:       "/user/1007/cart/2008",
+			path:       "/user/1007/cart/1076963",
 			body:       `{"count":`,
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "zero count",
-			path:       "/user/1007/cart/2008",
+			path:       "/user/1007/cart/1076963",
 			body:       `{"count":0}`,
 			wantStatus: http.StatusBadRequest,
 		},
 		{
 			name:       "negative count",
-			path:       "/user/1007/cart/2008",
+			path:       "/user/1007/cart/1076963",
 			body:       `{"count":-1}`,
 			wantStatus: http.StatusBadRequest,
 		},

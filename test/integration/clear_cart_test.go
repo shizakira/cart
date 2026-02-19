@@ -10,7 +10,7 @@ import (
 func (s *Suite) Test_ClearCart_OK() {
 	reqAdd, _ := http.NewRequest(
 		http.MethodPost,
-		rootPath+"/user/4001/cart/2008",
+		rootPath+"/user/4001/cart/1076963",
 		strings.NewReader(`{"count":3}`),
 	)
 	reqAdd.Header.Set("Content-Type", "application/json")

@@ -17,17 +17,25 @@ type App struct {
 }
 
 type Config struct {
-	App      App
-	HTTP     httpserver.Config
-	Logger   logger.Config
-	Postgres postgres.Config
+	App            App
+	HTTP           httpserver.Config
+	Logger         logger.Config
+	Postgres       postgres.Config
 	ProductService product.Config
 }
 
 func New() (Config, error) {
+	return load(".env")
+}
+
+func NewTest() (Config, error) {
+	return load(".env.test")
+}
+
+func load(env string) (Config, error) {
 	var config Config
 
-	if err := godotenv.Load(".env"); err != nil {
+	if err := godotenv.Load(env); err != nil {
 		return config, fmt.Errorf("godotenv.Load: %w", err)
 	}
 

@@ -10,7 +10,7 @@ import (
 func (s *Suite) Test_RemoveItem_OK() {
 	reqAdd, _ := http.NewRequest(
 		http.MethodPost,
-		rootPath+"/user/2001/cart/2008",
+		rootPath+"/user/2001/cart/1076963",
 		strings.NewReader(`{"count":2}`),
 	)
 	reqAdd.Header.Set("Content-Type", "application/json")
@@ -22,7 +22,7 @@ func (s *Suite) Test_RemoveItem_OK() {
 
 	reqDel, err := http.NewRequest(
 		http.MethodDelete,
-		rootPath+"/user/2001/cart/2008",
+		rootPath+"/user/2001/cart/1076963",
 		nil,
 	)
 	s.NoError(err)

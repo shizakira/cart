@@ -9,6 +9,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/rs/zerolog/log"
 )
 
 func (s *Suite) ResetMigrations() {
@@ -16,6 +17,8 @@ func (s *Suite) ResetMigrations() {
 	dbURL := os.Getenv("DB_MIGRATE_URL")
 
 	m, err := migrate.New(filesPath, dbURL)
+	log.Print(filesPath)
+	log.Print(dbURL)
 	s.NoError(err)
 
 	err = m.Down()

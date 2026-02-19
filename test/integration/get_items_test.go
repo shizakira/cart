@@ -24,7 +24,7 @@ func (s *Suite) Test_GetItems_EmptyCart() {
 
 func (s *Suite) Test_GetItems_OK() {
 	req1, _ := http.NewRequest(http.MethodPost,
-		rootPath+"/user/1001/cart/2008",
+		rootPath+"/user/1001/cart/1076963",
 		strings.NewReader(`{"count":2}`),
 	)
 	req1.Header.Set("Content-Type", "application/json")
@@ -36,7 +36,7 @@ func (s *Suite) Test_GetItems_OK() {
 
 	req2, _ := http.NewRequest(
 		http.MethodPost,
-		rootPath+"/user/1001/cart/2958025",
+		rootPath+"/user/1001/cart/1148162",
 		strings.NewReader(`{"count":1}`),
 	)
 	req2.Header.Set("Content-Type", "application/json")
