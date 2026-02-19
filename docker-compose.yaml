@@ -6,10 +6,10 @@ services:
     depends_on:
       - postgres
     ports:
-      - '8082:8082'
+      - "8082:${HTTP_PORT}"
 
   postgres:
-    container_name: cart_db
+    container_name: cart_postgres
     image: postgres:17
     ports:
       - "5432:5432"
