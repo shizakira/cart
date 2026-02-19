@@ -9,7 +9,7 @@ import (
 
 	"github.com/rs/zerolog/log"
 	"github.com/shizakira/cart/internal/adapter/postgres"
-	fakeproductservice "github.com/shizakira/cart/internal/adapter/product_service/fake"
+	"github.com/shizakira/cart/internal/adapter/product"
 	pgpool "github.com/shizakira/cart/pkg/postgres"
 
 	"github.com/shizakira/cart/internal/config"
@@ -26,7 +26,8 @@ func Run(ctx context.Context, c config.Config) error {
 
 	//storage := in_memory_storage.New()
 	storage := postgres.New(pgPool)
-	productSvc := fakeproductservice.New()
+
+	productSvc := product.NewService(c.ProductService)
 
 	uc := usecase.NewCart(storage, productSvc)
 

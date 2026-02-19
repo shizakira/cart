@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/shizakira/cart/internal/adapter/product"
 	"github.com/shizakira/cart/pkg/httpserver"
 	"github.com/shizakira/cart/pkg/logger"
 	"github.com/shizakira/cart/pkg/postgres"
@@ -20,6 +21,7 @@ type Config struct {
 	HTTP     httpserver.Config
 	Logger   logger.Config
 	Postgres postgres.Config
+	ProductService product.Config
 }
 
 func New() (Config, error) {
