@@ -7,6 +7,15 @@ run-all:
 down:
 	docker compose down
 
+grpc_gen:
+	buf dep update
+	mkdir -p ./gen/grpc
+	buf generate
+
+grpc-dep-install:
+	grpc-dep
+
+
 mockery-install:
 	go install github.com/vektra/mockery/v3@v3.2.5
 
