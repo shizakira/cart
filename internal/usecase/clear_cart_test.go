@@ -20,7 +20,7 @@ func TestCart_Clear_Success(t *testing.T) {
 		Return(nil).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.Clear(ctx, input)
 
@@ -37,7 +37,7 @@ func TestCart_Clear_StorageError(t *testing.T) {
 		Return(assert.AnError).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.Clear(ctx, input)
 
