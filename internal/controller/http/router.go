@@ -33,6 +33,7 @@ func Router(uc *usecase.Cart) http.Handler {
 		r.Delete("/{sku_id}", handlers.RemoveItem)
 		r.Delete("/", handlers.ClearCart)
 		r.Get("/", handlers.GetItems)
+		r.Post("/cart/checkout", handlers.Checkout)
 	})
 
 	return r
