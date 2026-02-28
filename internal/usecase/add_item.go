@@ -14,10 +14,20 @@ func (c *Cart) AddItem(ctx context.Context, input dto.AddItemInput) error {
 		return fmt.Errorf("productService.GetProduct: %w", err)
 	}
 
+	count, err := c.lomsService.StocksInfo(ctx, uint32(input.SkuID))
+	if err != nil {
+		return fmt.Errorf("lomsService.StocksInfo: %w", err)
+	}
+
+	if count < uint64(input.Count) {
+		return domain.ErrInsufficientStock
+	}
+
 	cart, err := c.storage.Find(ctx, input.UserID)
 	if err != nil {
 		return fmt.Errorf("storage.Find: %w", err)
 	}
+
 	if cart == nil {
 		cart = domain.NewCart(input.UserID)
 	}

@@ -8,6 +8,7 @@ import (
 	"syscall"
 
 	"github.com/rs/zerolog/log"
+	"github.com/shizakira/cart/internal/adapter/loms"
 	"github.com/shizakira/cart/internal/adapter/postgres"
 	"github.com/shizakira/cart/internal/adapter/product"
 	pgpool "github.com/shizakira/cart/pkg/postgres"
@@ -28,8 +29,11 @@ func Run(ctx context.Context, c config.Config) error {
 	storage := postgres.New(pgPool)
 
 	productSvc := product.NewService(c.ProductService)
-
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc, err := loms.NewService(c.LomsService)
+	if err != nil {
+		return fmt.Errorf("loms_client_grpc.New: %w", err)
+	}
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	r := http.Router(uc)
 	httpServer := httpserver.New(r, c.HTTP)
