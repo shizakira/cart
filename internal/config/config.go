@@ -5,6 +5,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
+	"github.com/shizakira/cart/internal/adapter/loms"
 	"github.com/shizakira/cart/internal/adapter/product"
 	"github.com/shizakira/cart/pkg/httpserver"
 	"github.com/shizakira/cart/pkg/logger"
@@ -22,6 +23,7 @@ type Config struct {
 	Logger         logger.Config
 	Postgres       postgres.Config
 	ProductService product.Config
+	LomsService    loms.Config
 }
 
 func New() (Config, error) {

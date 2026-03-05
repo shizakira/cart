@@ -42,7 +42,7 @@ func TestCart_GetItems_Success(t *testing.T) {
 		Return(model.Product{Name: "Product C", Price: 600}, nil).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	uc := usecase.NewCart(storage, productSvc, nil)
 
 	output, err := uc.GetItems(ctx, input)
 
@@ -80,7 +80,7 @@ func TestCart_GetItems_StorageFindReturnsError(t *testing.T) {
 		Return((*domain.Cart)(nil), assert.AnError).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	_, err := uc.GetItems(ctx, input)
 
@@ -103,7 +103,7 @@ func TestCart_GetItems_CartEmpty(t *testing.T) {
 		Return(cart, nil).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	_, err := uc.GetItems(ctx, input)
 
@@ -131,7 +131,7 @@ func TestCart_GetItems_ProductServiceReturnsError(t *testing.T) {
 		Return(model.Product{}, assert.AnError).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	uc := usecase.NewCart(storage, productSvc, nil)
 
 	_, err := uc.GetItems(ctx, input)
 

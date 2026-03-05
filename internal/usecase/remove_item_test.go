@@ -26,7 +26,7 @@ func TestCart_RemoveItem_Success_CartNotFound(t *testing.T) {
 		Once()
 	storage.AssertNotCalled(t, "Save")
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.RemoveItem(ctx, input)
 
@@ -56,7 +56,7 @@ func TestCart_RemoveItem_Success_ItemRemoved(t *testing.T) {
 		Return(nil).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.RemoveItem(ctx, input)
 
@@ -84,7 +84,7 @@ func TestCart_RemoveItem_Success_ItemNotInCart(t *testing.T) {
 		Return(nil).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.RemoveItem(ctx, input)
 
@@ -105,7 +105,7 @@ func TestCart_RemoveItem_StorageFindReturnsError(t *testing.T) {
 		Once()
 	storage.AssertNotCalled(t, "Save")
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.RemoveItem(ctx, input)
 
@@ -136,7 +136,7 @@ func TestCart_RemoveItem_StorageSaveReturnsError(t *testing.T) {
 		Return(assert.AnError).
 		Once()
 
-	uc := usecase.NewCart(storage, nil)
+	uc := usecase.NewCart(storage, nil, nil)
 
 	err := uc.RemoveItem(ctx, input)
 

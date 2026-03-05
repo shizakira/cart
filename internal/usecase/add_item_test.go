@@ -39,13 +39,85 @@ func TestCart_AddItem_Success_NewItem(t *testing.T) {
 		Return(model.Product{}, nil).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.On("StocksInfo", ctx, uint32(input.SkuID)).
+		Return(uint64(100), nil).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	err := uc.AddItem(ctx, input)
 
 	require.NoError(t, err)
 	storage.AssertExpectations(t)
 	productSvc.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
+}
+
+func TestCart_AddItem_InsufficientStock(t *testing.T) {
+	ctx := context.Background()
+	input := dto.AddItemInput{
+		UserID: 1007,
+		SkuID:  2008,
+		Count:  100,
+	}
+
+	storage := &mocks.Storage{}
+	storage.AssertNotCalled(t, "Find")
+	storage.AssertNotCalled(t, "Save")
+
+	productSvc := &mocks.ProductService{}
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, nil).
+		Once()
+
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.On("StocksInfo", ctx, uint32(input.SkuID)).
+		Return(uint64(5), nil).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
+
+	err := uc.AddItem(ctx, input)
+
+	require.Error(t, err)
+	require.ErrorIs(t, err, domain.ErrInsufficientStock)
+	storage.AssertExpectations(t)
+	productSvc.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
+}
+
+func TestCart_AddItem_LomsServiceReturnsError(t *testing.T) {
+	ctx := context.Background()
+	input := dto.AddItemInput{
+		UserID: 1007,
+		SkuID:  2008,
+		Count:  1,
+	}
+
+	storage := &mocks.Storage{}
+	storage.AssertNotCalled(t, "Find")
+	storage.AssertNotCalled(t, "Save")
+
+	productSvc := &mocks.ProductService{}
+	productSvc.On("GetProduct", ctx, input.SkuID).
+		Return(model.Product{}, nil).
+		Once()
+
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.On("StocksInfo", ctx, uint32(input.SkuID)).
+		Return(uint64(0), assert.AnError).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
+
+	err := uc.AddItem(ctx, input)
+
+	require.Error(t, err)
+	require.Contains(t, err.Error(), "lomsService.StocksInfo")
+	storage.AssertExpectations(t)
+	productSvc.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
 }
 
 func TestCart_AddItem_ProductNotFound(t *testing.T) {
@@ -65,7 +137,10 @@ func TestCart_AddItem_ProductNotFound(t *testing.T) {
 		Return(model.Product{}, model.ErrProductNotFound).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.AssertNotCalled(t, "StocksInfo")
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	err := uc.AddItem(ctx, input)
 
@@ -74,6 +149,7 @@ func TestCart_AddItem_ProductNotFound(t *testing.T) {
 	require.ErrorIs(t, err, model.ErrProductNotFound)
 	productSvc.AssertExpectations(t)
 	storage.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
 }
 
 func TestCart_AddItem_ProductServiceReturnsError(t *testing.T) {
@@ -93,7 +169,10 @@ func TestCart_AddItem_ProductServiceReturnsError(t *testing.T) {
 		Return(model.Product{}, assert.AnError).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.AssertNotCalled(t, "StocksInfo")
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	err := uc.AddItem(ctx, input)
 
@@ -101,6 +180,7 @@ func TestCart_AddItem_ProductServiceReturnsError(t *testing.T) {
 	require.Contains(t, err.Error(), "productService.GetProduct")
 	productSvc.AssertExpectations(t)
 	storage.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
 }
 
 func TestCart_AddItem_StorageFindReturnsError(t *testing.T) {
@@ -122,7 +202,12 @@ func TestCart_AddItem_StorageFindReturnsError(t *testing.T) {
 		Return(model.Product{}, nil).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.On("StocksInfo", ctx, uint32(input.SkuID)).
+		Return(uint64(100), nil).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	err := uc.AddItem(ctx, input)
 
@@ -130,6 +215,7 @@ func TestCart_AddItem_StorageFindReturnsError(t *testing.T) {
 	require.Contains(t, err.Error(), "storage.Find")
 	storage.AssertExpectations(t)
 	productSvc.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
 }
 
 func TestCart_AddItem_StorageSaveReturnsError(t *testing.T) {
@@ -139,6 +225,7 @@ func TestCart_AddItem_StorageSaveReturnsError(t *testing.T) {
 		SkuID:  2008,
 		Count:  4,
 	}
+
 	storage := &mocks.Storage{}
 	storage.On("Find", ctx, input.UserID).
 		Return(nil, nil).
@@ -157,7 +244,12 @@ func TestCart_AddItem_StorageSaveReturnsError(t *testing.T) {
 		Return(model.Product{}, nil).
 		Once()
 
-	uc := usecase.NewCart(storage, productSvc)
+	lomsSvc := &mocks.LomsService{}
+	lomsSvc.On("StocksInfo", ctx, uint32(input.SkuID)).
+		Return(uint64(100), nil).
+		Once()
+
+	uc := usecase.NewCart(storage, productSvc, lomsSvc)
 
 	err := uc.AddItem(ctx, input)
 
@@ -165,4 +257,5 @@ func TestCart_AddItem_StorageSaveReturnsError(t *testing.T) {
 	require.Contains(t, err.Error(), "storage.Save")
 	storage.AssertExpectations(t)
 	productSvc.AssertExpectations(t)
+	lomsSvc.AssertExpectations(t)
 }

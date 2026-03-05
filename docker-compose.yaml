@@ -12,7 +12,7 @@ services:
     container_name: cart_postgres
     image: postgres:17
     ports:
-      - "5432:5432"
+      - "5433:5432"
     restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB_NAME}
